@@ -1,6 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, date, datetime, timedelta
 from uuid import uuid4
+from zoneinfo import ZoneInfo
 
 from fastapi import HTTPException
 from fastapi.testclient import TestClient
@@ -45,7 +46,9 @@ def test_search_booking_lookup_and_idempotent_cancel(
         params={
             "origin": "yul",
             "destination": "yyz",
-            "departure_date": departure.astimezone().date().isoformat(),
+            "departure_date": departure.astimezone(
+                ZoneInfo(airports["YUL"].timezone)
+            ).date().isoformat(),
         },
     )
     assert search.status_code == 200

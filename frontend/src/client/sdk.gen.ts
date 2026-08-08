@@ -34,7 +34,7 @@ export class LoginService {
             }
         });
     }
-    
+
     /**
      * Test Token
      */
@@ -60,7 +60,7 @@ export class UsersService {
             ...options
         });
     }
-    
+
     /**
      * Update Password Me
      */
@@ -115,7 +115,7 @@ export class FlightsService {
             ...options
         });
     }
-    
+
     /**
      * Get Flight
      */
@@ -143,7 +143,7 @@ export class BookingsService {
             }
         });
     }
-    
+
     /**
      * Lookup Booking
      */
@@ -158,7 +158,7 @@ export class BookingsService {
             }
         });
     }
-    
+
     /**
      * Cancel Public Booking
      */
@@ -187,7 +187,7 @@ export class AdminService {
             ...options
         });
     }
-    
+
     /**
      * List Flights
      */
@@ -199,7 +199,7 @@ export class AdminService {
             ...options
         });
     }
-    
+
     /**
      * Create Flight
      */
@@ -215,7 +215,7 @@ export class AdminService {
             }
         });
     }
-    
+
     /**
      * Delete Flight
      */
@@ -227,7 +227,7 @@ export class AdminService {
             ...options
         });
     }
-    
+
     /**
      * Get Admin Flight
      */
@@ -239,7 +239,7 @@ export class AdminService {
             ...options
         });
     }
-    
+
     /**
      * Update Flight
      */
@@ -255,7 +255,7 @@ export class AdminService {
             }
         });
     }
-    
+
     /**
      * Cancel Admin Flight
      */
@@ -267,7 +267,7 @@ export class AdminService {
             ...options
         });
     }
-    
+
     /**
      * List Bookings
      */
@@ -279,7 +279,7 @@ export class AdminService {
             ...options
         });
     }
-    
+
     /**
      * Update Booking Status
      */
