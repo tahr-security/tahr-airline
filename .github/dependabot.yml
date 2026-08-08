@@ -23,6 +23,10 @@ updates:
     groups:
       frontend:
         patterns: ["*"]
+        update-types: [minor, patch]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: docker
     directory: /backend
@@ -31,6 +35,9 @@ updates:
     groups:
       container:
         patterns: ["*"]
+    ignore:
+      - dependency-name: python
+        versions: [">=3.15"]
 
   - package-ecosystem: docker-compose
     directory: /
