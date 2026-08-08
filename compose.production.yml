@@ -1,0 +1,92 @@
+name: tahr-air
+
+x-application-environment: &application-environment
+  ENVIRONMENT: ${ENVIRONMENT:-production}
+  PROJECT_NAME: ${PROJECT_NAME:-Tahr Air}
+  FRONTEND_HOST: ${FRONTEND_HOST:-http://localhost:8000}
+  BACKEND_CORS_ORIGINS: ${BACKEND_CORS_ORIGINS:-http://localhost:8000}
+  SECRET_KEY: ${SECRET_KEY:?Set SECRET_KEY in .env}
+  FIRST_SUPERUSER: ${FIRST_SUPERUSER:-wardenn-admin@tahr.ca}
+  FIRST_SUPERUSER_PASSWORD: ${FIRST_SUPERUSER_PASSWORD:?Set FIRST_SUPERUSER_PASSWORD in .env}
+  POSTGRES_SERVER: db
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: ${POSTGRES_DB:-tahr_air}
+  POSTGRES_USER: ${POSTGRES_USER:-tahr_air}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+
+x-application-security: &application-security
+  user: "10001:10001"
+  read_only: true
+  cap_drop:
+    - ALL
+  security_opt:
+    - no-new-privileges:true
+  tmpfs:
+    - /tmp:rw,noexec,nosuid,nodev,size=64m,uid=10001,gid=10001
+  init: true
+
+services:
+  db:
+    image: postgres@sha256:a02db8cac496f15b094798a38254f14d6e00741f709360e5e00bb6668ea31636
+    restart: unless-stopped
+    user: "999:999"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-tahr_air}
+      POSTGRES_USER: ${POSTGRES_USER:-tahr_air}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=32m,uid=999,gid=999
+      - /run/postgresql:rw,noexec,nosuid,nodev,size=16m,uid=999,gid=999
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    networks:
+      - tahr-air
+
+  prestart:
+    image: ${TAHR_AIR_IMAGE:?Set TAHR_AIR_IMAGE to an exact image reference}
+    <<: *application-security
+    command: ["bash", "scripts/prestart.sh"]
+    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment: *application-environment
+    networks:
+      - tahr-air
+
+  app:
+    image: ${TAHR_AIR_IMAGE:?Set TAHR_AIR_IMAGE to an exact image reference}
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    <<: *application-security
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      prestart:
+        condition: service_completed_successfully
+    environment: *application-environment
+    ports:
+      - "${APP_BIND_ADDRESS:-127.0.0.1}:${APP_PORT:-8000}:8000"
+    networks:
+      - tahr-air
+
+volumes:
+  postgres-data:
+    name: ${POSTGRES_VOLUME:-tahr-air-postgres}
+
+networks:
+  tahr-air:
+    name: ${TAHR_AIR_NETWORK:-tahr-air}

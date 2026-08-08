@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Tahr Air">
+  <rect width="64" height="64" rx="16" fill="#FFF8EA"/>
+  <path d="M7 47 23 24l8 11 8-10 18 22Z" fill="#3B9AD9"/>
+  <path d="m10 47 13-17 6 9 5-6 12 14Z" fill="#16324F"/>
+  <path d="M38 18c5-4 12-4 18-1-5 0-8 2-11 5l10 3-2 3-13-2-7 6-3-2 5-8Z" fill="#F47C6C"/>
+</svg>
