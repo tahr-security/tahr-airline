@@ -32,8 +32,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [[ ! "$GITHUB_REF_NAME" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
-            echo "Tag must match vMAJOR.MINOR.PATCH" >&2
+          if [[ ! "$GITHUB_REF_NAME" =~ ^v([0-9]+\.[0-9]+\.[0-9]+)(-modified)?$ ]]; then
+            echo "Tag must match vMAJOR.MINOR.PATCH or vMAJOR.MINOR.PATCH-modified" >&2
             exit 1
           fi
           echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
@@ -41,6 +41,21 @@ jobs:
         env:
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "${{ github.actor }}" --password-stdin
+      - name: Refuse existing immutable tags
+        env:
+          IMAGE: ghcr.io/tahr-security/tahr-airline
+          VERSION: ${{ steps.release.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if docker buildx imagetools inspect "$IMAGE:$VERSION" >/dev/null 2>&1; then
+            echo "Version tag already exists and will not be overwritten." >&2
+            exit 1
+          fi
+          if docker buildx imagetools inspect "$IMAGE:sha-${GITHUB_SHA}" >/dev/null 2>&1; then
+            echo "Commit tag already exists and will not be overwritten." >&2
+            exit 1
+          fi
       - name: Create isolated Buildx builder
         run: docker buildx create --name tahr-air-builder --driver docker-container --use
       - name: Build and publish with attestations
@@ -78,6 +93,21 @@ jobs:
             echo "Commit: \`$GITHUB_SHA\`"
             echo "Platform: \`linux/amd64\`"
           } >> "$GITHUB_STEP_SUMMARY"
+      - name: Check publication metadata and attestations boundary
+        env:
+          DIGEST: ${{ steps.image.outputs.digest }}
+          IMAGE: ghcr.io/tahr-security/tahr-airline
+        shell: bash
+        run: |
+          set -euo pipefail
+          provenance="$RUNNER_TEMP/tahr-provenance.json"
+          sbom="$RUNNER_TEMP/tahr-sbom.json"
+          docker buildx imagetools inspect "$IMAGE@$DIGEST" --format '{{ json .Provenance }}' > "$provenance"
+          docker buildx imagetools inspect "$IMAGE@$DIGEST" --format '{{ json .SBOM }}' > "$sbom"
+          python3 scripts/check_public_release_boundary.py \
+            --artifact image-metadata.json \
+            --artifact "$provenance" \
+            --artifact "$sbom"
       - name: Upload publication metadata
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:

@@ -47,6 +47,13 @@ blob-report/
 *sbom*.spdx.json
 image-metadata.json
 
+# Private evaluation material must never enter this public repository
+answer-key/
+answer-keys/
+private-evaluation/
+vulnerability-manifest.private.*
+exploit-notes.private.*
+
 # Editors and operating systems
 .DS_Store
 .idea/

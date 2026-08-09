@@ -73,6 +73,10 @@ environment can publish a single `linux/amd64` image with provenance and SBOM
 attestations. Creating a tag, approving publication, changing package
 visibility, and consuming the digest in Wardenn are separate operator actions.
 
+A separately built modified research release may exist for controlled security
+evaluation. Evaluation instructions and scoring material are maintained outside
+this public repository and its container build context.
+
 ## Attribution and license
 
 Tahr Air is based on Full Stack FastAPI Template commit
