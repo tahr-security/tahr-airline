@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, "codex/**"]
   pull_request:
     branches: [main]
   workflow_call:
@@ -28,6 +28,21 @@ env:
   TAHR_AIR_IMAGE: tahr-airline:ci
 
 jobs:
+  public-release-boundary:
+    name: Public release boundary
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out source and history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Check repository boundary
+        run: python3 scripts/check_public_release_boundary.py
+      - name: Check effective Docker context
+        run: python3 scripts/check_docker_context_boundary.py
+
   backend:
     name: Backend
     runs-on: ubuntu-latest
@@ -141,7 +156,7 @@ jobs:
 
   browser-and-container:
     name: Browser and container
-    needs: [backend, frontend, generated-client]
+    needs: [public-release-boundary, backend, frontend, generated-client]
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -160,6 +175,8 @@ jobs:
           bunx playwright install --with-deps chromium
       - name: Build hardened image
         run: docker compose -f compose.production.yml build app
+      - name: Inspect image layers for excluded material
+        run: python3 scripts/check_image_release_boundary.py "$TAHR_AIR_IMAGE"
       - name: Start stack
         run: docker compose -f compose.production.yml up -d --wait
       - name: Smoke test runtime constraints

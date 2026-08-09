@@ -79,6 +79,15 @@ def test_search_booking_lookup_and_idempotent_cancel(
         ).status_code
         == 200
     )
+    wrong_email_lookup = client.post(
+        f"{settings.API_V1_STR}/bookings/lookup",
+        json={
+            "booking_reference": booking["booking_reference"],
+            "passenger_email": "different-passenger@example.com",
+        },
+    )
+    assert wrong_email_lookup.status_code == 404
+    assert wrong_email_lookup.json() == {"detail": "Booking not found"}
     first_cancel = client.post(
         f"{settings.API_V1_STR}/bookings/cancel", json=credentials
     )
