@@ -4,6 +4,7 @@ from app.airline import (
     booking_to_public,
     cancel_booking,
     create_confirmed_booking,
+    get_booking_by_reference,
     get_booking_for_credentials,
 )
 from app.api.deps import SessionDep
@@ -35,10 +36,9 @@ def lookup_booking(body: BookingLookup, session: SessionDep) -> BookingPublic:
 
 @router.post("/cancel", response_model=BookingPublic)
 def cancel_public_booking(body: BookingLookup, session: SessionDep) -> BookingPublic:
-    booking = get_booking_for_credentials(
+    booking = get_booking_by_reference(
         session,
         booking_reference=body.booking_reference,
-        passenger_email=str(body.passenger_email),
     )
     booking = cancel_booking(session, booking)
     return booking_to_public(session, booking)

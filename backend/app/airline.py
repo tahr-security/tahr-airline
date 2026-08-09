@@ -106,6 +106,16 @@ def get_booking_for_credentials(
     return booking
 
 
+def get_booking_by_reference(session: Session, *, booking_reference: str) -> Booking:
+    statement = select(Booking).where(
+        Booking.booking_reference == booking_reference.strip().upper()
+    )
+    booking = session.exec(statement).first()
+    if booking is None:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    return booking
+
+
 def lock_flight(session: Session, flight_id: uuid.UUID) -> Flight:
     statement = select(Flight).where(Flight.id == flight_id).with_for_update()
     flight = session.exec(statement).first()
