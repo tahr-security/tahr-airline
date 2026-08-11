@@ -43,12 +43,13 @@ the registry-returned digest in the workflow summary and retained metadata
 artifact. It never publishes `latest`.
 
 Creating or pushing a release tag, approving the protected environment,
-changing GHCR visibility, and onboarding the returned digest into Wardenn each
-require separate explicit approval. Do not invent or prefill an image digest.
+changing GHCR visibility, and onboarding the returned digest into an external
+deployment catalog each require separate explicit approval. Do not invent or
+prefill an image digest.
 
 ## Release evidence
 
-Before Wardenn onboarding, record:
+Before downstream onboarding, record:
 
 - source commit and pinned upstream template commit
 - application, prestart, and PostgreSQL exact image digests
@@ -58,5 +59,5 @@ Before Wardenn onboarding, record:
 - prestart, health, restart-persistence, and browser smoke results
 - clean classification and operator approvals
 
-Wardenn deployment and catalog synchronization are outside this repository and
-must not run from this release workflow.
+Deployment and catalog synchronization are outside this repository and must not
+run from this release workflow.

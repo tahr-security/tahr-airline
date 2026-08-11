@@ -28,7 +28,7 @@ OpenAPI document and generated client. Run Playwright for user-facing changes.
 - Explain user-visible behavior and important design decisions.
 - Add tests for success, failure, authorization, and concurrency behavior.
 - Keep public request and response validators explicit.
-- Preserve the initial-superuser login contract used by Wardenn.
+- Preserve the initial-superuser login contract.
 - Preserve lock order for capacity transitions: flight first, booking second.
 - Never weaken container restrictions or expose PostgreSQL.
 - Update docs when an interface, environment variable, or operator step changes.

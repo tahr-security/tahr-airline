@@ -72,8 +72,8 @@ async function mockApi(page: Page) {
     else if (path.endsWith("/users/me"))
       body = {
         id: "40000000-0000-4000-8000-000000000001",
-        email: "wardenn-admin@tahr.ca",
-        full_name: "Wardenn Admin",
+        email: "demo-admin@tahr.ca",
+        full_name: "Demo Admin",
         is_active: true,
         is_superuser: true,
       }
@@ -203,7 +203,7 @@ test("shows sold-out and generic lookup failure states", async ({ page }) => {
 
 test("staff login opens protected operations dashboard", async ({ page }) => {
   await page.goto("/login")
-  await page.getByLabel("Email address").fill("wardenn-admin@tahr.ca")
+  await page.getByLabel("Email address").fill("demo-admin@tahr.ca")
   await page.getByTestId("password-input").fill("correct-horse-battery-staple")
   await page.getByRole("button", { name: "Sign in" }).click()
   await expect(page).toHaveURL(/\/admin/)

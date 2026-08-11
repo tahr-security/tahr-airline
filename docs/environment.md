@@ -5,7 +5,7 @@
 | `ENVIRONMENT` | yes | `local`, `staging`, or `production`; production rejects known placeholder secrets. |
 | `PROJECT_NAME` | yes | FastAPI/OpenAPI title. Defaults to `Tahr Air` in Compose. |
 | `SECRET_KEY` | yes | Random JWT signing secret. Never reuse another password. |
-| `FIRST_SUPERUSER` | yes | Bootstrap administrator email; Wardenn uses `wardenn-admin@tahr.ca`. |
+| `FIRST_SUPERUSER` | yes | Bootstrap administrator email; defaults to `demo-admin@tahr.ca`. |
 | `FIRST_SUPERUSER_PASSWORD` | yes | Bootstrap password. Retry does not replace an existing user. |
 | `POSTGRES_SERVER` | yes | PostgreSQL hostname; fixed to `db` in Compose. |
 | `POSTGRES_PORT` | yes | PostgreSQL port; defaults to `5432`. |

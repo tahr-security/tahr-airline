@@ -40,7 +40,7 @@ Open:
 - Swagger UI: <http://localhost:8000/docs>
 - Database-aware health check: <http://localhost:8000/api/v1/utils/health-check/>
 
-The initial administrator email defaults to `wardenn-admin@tahr.ca`. Stop and
+The initial administrator email defaults to `demo-admin@tahr.ca`. Stop and
 remove local data with:
 
 ```bash
@@ -71,7 +71,7 @@ The repository contains no deployment credentials. `.env` is ignored. A
 release tag runs all verification before the `ghcr-production` protected
 environment can publish a single `linux/amd64` image with provenance and SBOM
 attestations. Creating a tag, approving publication, changing package
-visibility, and consuming the digest in Wardenn are separate operator actions.
+visibility, and consuming the digest in an external deployment catalog are separate operator actions.
 
 A separately built modified research release may exist for controlled security
 evaluation. Evaluation instructions and scoring material are maintained outside

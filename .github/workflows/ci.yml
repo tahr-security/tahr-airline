@@ -20,7 +20,7 @@ env:
   FRONTEND_HOST: http://localhost:8000
   BACKEND_CORS_ORIGINS: http://localhost:8000
   SECRET_KEY: ci-only-secret-key-not-for-production
-  FIRST_SUPERUSER: wardenn-admin@tahr.ca
+  FIRST_SUPERUSER: demo-admin@tahr.ca
   FIRST_SUPERUSER_PASSWORD: ci-only-admin-password
   POSTGRES_DB: tahr_air_test
   POSTGRES_USER: tahr_air
